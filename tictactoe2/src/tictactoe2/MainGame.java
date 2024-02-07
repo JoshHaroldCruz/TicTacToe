@@ -14,9 +14,14 @@ import java.awt.event.ActionEvent;
 
 public class MainGame extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static String[][] board = {{" ", " ", " "}, {" ", " ", " "}, {" ", " ", " "}};
 	private JPanel contentPane;
 	public static String current="";
+	private static boolean isOver = false;
 
 	private static  boolean isValidMove(int row, int col) {
         return row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == " ";
@@ -84,7 +89,7 @@ public class MainGame extends JFrame {
             	 MainGame mainGameFrame = new MainGame();
 	                mainGameFrame.setVisible(true);
 
-	                MiniGame miniGameFrame = new MiniGame(mainGameFrame);
+	                MiniGame miniGameFrame = new MiniGame();
 	                miniGameFrame.setVisible(true);
 
 	                // Disable the MainGame frame while MiniGame is visible
@@ -141,32 +146,35 @@ public class MainGame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainGame mainGameFrame = new MainGame();
-	                mainGameFrame.setVisible(true);
+					
+						MainGame mainGameFrame = new MainGame();
+		                mainGameFrame.setVisible(true);
+		                
+		                MiniGame miniGameFrame = new MiniGame();
+		                miniGameFrame.setVisible(true);
 
-	                MiniGame miniGameFrame = new MiniGame(mainGameFrame);
-	                miniGameFrame.setVisible(true);
+		                // Disable the MainGame frame while MiniGame is visible
+		                mainGameFrame.setEnabled(false);
 
-	                // Disable the MainGame frame while MiniGame is visible
-	                mainGameFrame.setEnabled(false);
-
-	                // Add a window listener to re-enable MainGame when MiniGame is closed
-	                miniGameFrame.addWindowListener(new WindowAdapter() {
-	                    @Override
-	                    public void windowClosed(WindowEvent e) {
-	                        mainGameFrame.setEnabled(true);
-	                        JOptionPane.showOptionDialog(
-	                                null,
-	                                current + " must select!",
-	                                "Message",
-	                                JOptionPane.DEFAULT_OPTION,
-	                                JOptionPane.INFORMATION_MESSAGE,
-	                                null,
-	                                new Object[]{"OK"},
-	                                "OK"
-	                        );
-	                    }
-	                });
+		                // Add a window listener to re-enable MainGame when MiniGame is closed
+		                miniGameFrame.addWindowListener(new WindowAdapter() {
+		                    @Override
+		                    public void windowClosed(WindowEvent e) {
+		                        mainGameFrame.setEnabled(true);
+		                        JOptionPane.showOptionDialog(
+		                                null,
+		                                current + " must select!",
+		                                "Message",
+		                                JOptionPane.DEFAULT_OPTION,
+		                                JOptionPane.INFORMATION_MESSAGE,
+		                                null,
+		                                new Object[]{"OK"},
+		                                "OK"
+		                        );
+		                    }
+		                });
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

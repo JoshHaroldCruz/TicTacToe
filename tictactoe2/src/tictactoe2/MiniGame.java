@@ -1,22 +1,23 @@
 package tictactoe2;
 
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
-import java.awt.FlowLayout;
-import java.awt.Panel;
 import java.awt.event.ActionListener;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 public class MiniGame extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static String[][] board = {{" ", " ", " "}, {" ", " ", " "}, {" ", " ", " "}};
 	private static String currentPlayer = "X";
-    private static MainGame mainGame;
     private static MiniGame mg;
 	private JPanel contentPane;
 	/**
@@ -65,49 +66,64 @@ public class MiniGame extends JFrame {
     }
     
     private static void ProcessGame(int row, int col) {
-    	 if (isValidMove(row, col)) {
-             makeMove(row, col);
-             if (checkWin()) {
-            	 JOptionPane.showOptionDialog(
-                         null,
-                         "Player " + currentPlayer + " wins!",
-                         "Message",
-                         JOptionPane.DEFAULT_OPTION,
-                         JOptionPane.INFORMATION_MESSAGE,
-                         null,
-                         new Object[]{"OK"},
-                         "OK"
-                 );
-            	 mainGame.current=currentPlayer;            	 
-            	 mg.dispose();
-             } else if (isBoardFull()) {
-            	 JOptionPane.showOptionDialog(
-                         null,
-                         "It's a draw!",
-                         "Message",
-                         JOptionPane.DEFAULT_OPTION,
-                         JOptionPane.INFORMATION_MESSAGE,
-                         null,
-                         new Object[]{"OK"},
-                         "OK"
-                 );
-             } else {
-                 switchPlayer();
-             }
-         } else {
-        	 JOptionPane.showOptionDialog(
-                     null,
-                     "It's a draw!",
-                     "Message",
-                     JOptionPane.DEFAULT_OPTION,
-                     JOptionPane.INFORMATION_MESSAGE,
-                     null,
-                     new Object[]{"OK"},
-                     "OK"
-        	 );
-         }
+        if (isValidMove(row, col)) {
+            makeMove(row, col);
+            if (checkWin()) {
+                JOptionPane.showOptionDialog(
+                        null,
+                        "Player " + currentPlayer + " wins!",
+                        "Message",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE,
+                        null,
+                        new Object[]{"OK"},
+                        "OK"
+                );
+                MainGame.current = currentPlayer;
+                mg.dispose();
+            } else if (isBoardFull()) {
+                MainGame.current = "";
+                JOptionPane.showOptionDialog(
+                        null,
+                        "It's a draw!",
+                        "Message",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE,
+                        null,
+                        new Object[]{"OK"},
+                        "OK"
+                );
+                resetBoard();  // Reset the board for a new round
+            } else {
+                switchPlayer();
+            }
+        }
     }
-    
+    private static void resetBoard() {
+        // Reset the board array to its initial state
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board[i][j] = " ";
+            }
+        }
+
+        // Reset the current player to "X"
+        currentPlayer = "X";
+
+        // Enable all buttons and clear their text
+        enableAllButtons();
+    }
+
+    private static void enableAllButtons() {
+        Component[] components = mg.getContentPane().getComponents();
+        for (Component component : components) {
+            if (component instanceof JButton) {
+                JButton button = (JButton) component;
+                button.setEnabled(true);
+                button.setText("");
+            }
+        }
+    }
     private static boolean isBoardFull() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -122,11 +138,9 @@ public class MiniGame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MiniGame(MainGame mainGame) {
-		this.board = new String[][]{{" ", " ", " "}, {" ", " ", " "}, {" ", " ", " "}};
-		this.mainGame = mainGame;
-		
-		this.mg=this;
+	public MiniGame() {
+		MiniGame.board = new String[][]{{" ", " ", " "}, {" ", " ", " "}, {" ", " ", " "}};
+		MiniGame.mg=this;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 411, 441);
 		setLocationRelativeTo(null);
